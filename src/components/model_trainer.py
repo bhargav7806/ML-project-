@@ -39,19 +39,59 @@ class ModelTrainer:
             )
 
             models = {
-                "Random Forest" : RandomForestRegressor(),
                 "Decision Tree" : DecisionTreeRegressor(),
-                "Gradient Boosting" : GradientBoostingRegressor(),
-                "Linear Regressor"  : LinearRegression(),
+                "Random_Forest" : RandomForestRegressor(),
+                "GradientBoost Regressor" : GradientBoostingRegressor(),
+                "Linear Regression"  : LinearRegression(),
                 "K-Neighbour Regressor" : KNeighborsRegressor(),
-                "XGBRegressor" : XGBRegressor(),
-                "CatBoosting Regressor" : CatBoostRegressor(),
-                "AdaBoost Regressor" : AdaBoostRegressor() , 
-                "Ridge Regression" : Ridge(),
-                "Lasso Regression" :Lasso()
+                "XGBRgressor" : XGBRegressor(),
+                # "CatBoosting Regressor" : CatBoostRegressor(),
+                "AdaBoost Regressor" : AdaBoostRegressor() 
+               
             }
 
-            model_report:dict=evalute_model(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
+            params = {
+                "Decision Tree" :{
+                    'criterion' : ['squared_error' , 'friedman_mse' , 'absolute_error' , 'poisson'],
+                    'splitter' :['best' , 'random'],
+                    'max_features' :['log2' , 'sqrt']
+                },
+                'Random_Forest':{
+                    'criterion':['squared_error' , 'friedman_mse' , 'absolute_error' , 'poisson'],
+                    'max_features' : ['log2' ,'sqrt'],
+                    'n_estimator' : [8 , 16 , 32 , 64 , 128 , 256]
+                },
+                'GradientBoost Regressor' :{
+                    'loss':['squared_error' , 'huber' , 'absolute_error' , 'quantile'],
+                    'learning_rate' :[.1 , .01 , .05 , .001],
+                    'subsample' : [.6 , .7 ,.75 , .8 , .85 , .9],
+                    'criterion' : ['squared_error' , 'friedman_mse'],
+                    'max_feature' : ['auto' , 'sqrt' , 'log2'],
+                    'n_estimator' :[8 , 16 , 32 , 64 , 128 , 256]
+                },
+                'Linear Regression' : {},
+                'K-Neighbour Regressor' : {
+                    'n_neighbour' : [5 , 7 , 9 , 11],
+                    'weights' : ['uniform' , 'distance'],
+                    'algorithm' : ['ball_tree' , "kd_tree" , "brute"]
+                },
+                "XGBRgressor" : {
+                    'learning_rate' : [.1 , .01 , .05 , .001],
+                    'n_estimator' : [8 , 16 , 32 , 64 , 128 , 256]
+                },
+                'AdaBoost Regressor' : {
+                    'learning_rate'  : [.1 , .01 , .05 , .001],
+                    'loss' : ['linear' , 'square' , 'exponential'],
+                    'n_estimators' : [8 , 16 , 32 , 64 , 128 , 256] 
+                }
+
+
+
+
+                
+            }
+
+            model_report:dict=evalute_model(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models , param = params)
 
             best_model_score = max(sorted(model_report.values()))
 
